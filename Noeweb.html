@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Noesis Premium</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+:root{
+--bg:#f1f5f9;
+--card:#ffffff;
+--line:#e2e8f0;
+--text:#0f172a;
+--muted:#64748b;
+--purple:#7c5cff;
+--purple2:#9b8cff;
+--green:#22c55e;
+--orange:#f59e0b;
+}
+
+body{
+font-family:'Inter',sans-serif;
+background:var(--bg);
+color:var(--text);
+overflow-x:hidden;
+}
+
+button, input, textarea, select{
+font-family:'Inter',sans-serif;
+}
+
+.app{
+display:flex;
+height:100vh;
+}
+
+.sidebar{
+width:290px;
+background:white;
+border-right:1px solid var(--line);
+padding:28px;
+overflow-y:auto;
+}
+
+.logo{
+display:flex;
+align-items:center;
+gap:14px;
+margin-bottom:40px;
+}
+
+.logo-circle{
+width:42px;
+height:42px;
+border-radius:50%;
+background:linear-gradient(135deg,var(--purple),#b56fff);
+box-shadow:0 0 30px rgba(124,92,255,.3);
+}
+
+.logo h1{
+font-size:34px;
+font-weight:900;
+letter-spacing:-2px;
+}
+
+.menu{
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+.menu-item{
+padding:16px 18px;
+border-radius:18px;
+display:flex;
+align-items:center;
+gap:14px;
+cursor:pointer;
+font-weight:700;
+transition:.25s;
+color:#334155;
+}
+
+.menu-item:hover{
+background:#f8fafc;
+transform:translateX(3px);
+}
+
+.menu-item.active{
+background:linear-gradient(135deg,var(--purple),#6b4eff);
+color:white;
+box-shadow:0 12px 30px rgba(124,92,255,.2);
+}
+
+.menu-title{
+font-size:12px;
+font-weight:800;
+letter-spacing:1px;
+margin:35px 0 16px;
+color:#94a3b8;
+text-transform:uppercase;
+}
+
+.main{
+flex:1;
+overflow-y:auto;
+padding:30px;
+}
+
+.hero h1{
+font-size:58px;
+font-weight:900;
+letter-spacing:-3px;
+margin-bottom:12px;
+}
+
+.hero p{
+max-width:850px;
+line-height:1.9;
+font-size:15px;
+color:var(--muted);
+}
+
+.hero-card{
+background:linear-gradient(135deg,rgba(124,92,255,.95),rgba(155,140,255,.92));
+padding:38px;
+border-radius:34px;
+margin:28px 0;
+box-shadow:0 20px 50px rgba(124,92,255,.2);
+color:white;
+}
+
+.hero-card h2{
+font-size:42px;
+font-weight:900;
+margin-bottom:14px;
+}
+
+.hero-card p{
+line-height:1.9;
+}
+
+.page, .feature-page{
+display:none;
+}
+
+.page.active, .feature-page.active{
+display:block;
+animation:fade .3s ease;
+}
+
+@keyframes fade{
+from{ opacity:0; transform:translateY(12px); }
+to{ opacity:1; transform:translateY(0); }
+}
+
+.video-grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
+gap:26px;
+}
+
+.video-card{
+background:white;
+border:1px solid var(--line);
+border-radius:30px;
+overflow:hidden;
+cursor:pointer;
+transition:.3s;
+position:relative;
+}
+
+.video-card:hover{
+transform:translateY(-8px);
+box-shadow:0 25px 50px rgba(15,23,42,.08);
+}
+
+.thumbnail{
+height:230px;
+position:relative;
+overflow:hidden;
+}
+
+.thumbnail img{
+width:100%;
+height:100%;
+object-fit:cover;
+transition:.35s;
+}
+
+.video-card:hover img{
+transform:scale(1.05);
+}
+
+.badge{
+position:absolute;
+top:16px;
+left:16px;
+padding:9px 14px;
+border-radius:999px;
+font-size:12px;
+font-weight:800;
+color:white;
+}
+
+.badge.free{ background:rgba(124,92,255,.95); }
+.badge.premium{ background:linear-gradient(135deg,#f59e0b,#f97316); }
+
+.dynamic-duration{
+position:absolute;
+right:16px;
+bottom:16px;
+padding:8px 12px;
+border-radius:12px;
+background:rgba(0,0,0,.7);
+font-size:12px;
+font-weight:700;
+color:white;
+}
+
+.video-content{ padding:24px; }
+.video-title{ font-size:24px; font-weight:900; line-height:1.4; margin-bottom:12px; }
+.video-desc{ line-height:1.8; font-size:14px; color:var(--muted); margin-bottom:20px; }
+.video-footer{ display:flex; justify-content:space-between; align-items:center; gap:12px; }
+.validator-text{ font-size:13px; color:var(--muted); }
+.research-tag{ padding:8px 12px; border-radius:999px; background:#f1f5f9; font-size:12px; font-weight:700; }
+
+.lock-layer{
+position:absolute;
+inset:0;
+background:rgba(255,255,255,.9);
+backdrop-filter:blur(8px);
+display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+text-align:center;
+padding:30px;
+z-index:10;
+}
+
+.lock-layer i{ font-size:60px; margin-bottom:18px; color:var(--purple); }
+.lock-layer h3{ font-size:32px; margin-bottom:10px; }
+.lock-layer p{ line-height:1.8; color:#475569; margin-bottom:20px; }
+.unlock-btn{ padding:15px 24px; border:none; border-radius:18px; background:linear-gradient(135deg,var(--purple),#6d5efc); color:white; font-weight:800; cursor:pointer; }
+
+.fyp-feed {
+display: flex;
+flex-direction: column;
+height: 100vh;
+width: 100%;
+max-width: 420px;
+margin: 20px 0;
+overflow-y: scroll;
+scroll-snap-type: y mandatory;
+border-radius: 24px;
+background: #000;
+box-shadow: 0 20px 50px rgba(15,23,42,.15);
+scrollbar-width: none;
+}
+
+.fyp-feed::-webkit-scrollbar { display: none; }
+.fyp-item { flex: none; width: 100%; height: 100%; scroll-snap-align: start; position: relative; background: #111; }
+.fyp-item video { width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
+
+.fyp-overlay {
+position: absolute;
+bottom: 0;
+left: 0;
+width: 100%;
+padding: 40px 24px 24px;
+background: linear-gradient(transparent, rgba(0,0,0,0.9));
+color: white;
+pointer-events: none;
+display: flex;
+flex-direction: column;
+gap: 8px;
+}
+
+.fyp-overlay h3 { font-size: 22px; font-weight: 800; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
+.fyp-overlay p { font-size: 14px; line-height: 1.6; opacity: 0.9; }
+.fyp-actions { position: absolute; right: 16px; bottom: 40px; display: flex; flex-direction: column; gap: 16px; z-index: 10; }
+
+.fyp-btn {
+width: 48px;
+height: 48px;
+border-radius: 50%;
+background: rgba(255,255,255,0.15);
+backdrop-filter: blur(8px);
+color: white;
+border: none;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 20px;
+cursor: pointer;
+transition: 0.2s;
+}
+
+.fyp-btn:hover { background: rgba(255,255,255,0.3); }
+.fyp-badge { position: absolute; top: 24px; left: 24px; padding: 8px 14px; border-radius: 999px; font-size: 12px; font-weight: 800; color: white; background: rgba(124,92,255,0.95); z-index: 10; }
+.fyp-duration { position: absolute; top: 24px; right: 24px; background: rgba(0,0,0,0.6); padding: 8px 12px; border-radius: 12px; color: white; font-size: 12px; font-weight: 700; z-index: 10; }
+
+.player-box, .meta-box, .discussion, .feature-card, .list-card, .mindmap-card, .request-box{ background:white; border:1px solid var(--line); border-radius:30px; }
+.player-box{ overflow:hidden; margin-top:20px; }
+.player-box video{ width:100%; max-height:620px; background:black; }
+.player-content{ padding:34px; }
+.player-title{ font-size:44px; font-weight:900; margin-bottom:14px; }
+.player-desc{ line-height:1.9; color:var(--muted); margin-bottom:30px; }
+.meta-box, .discussion{ padding:30px; margin-bottom:30px; }
+.meta-box h2, .discussion h2{ font-size:32px; margin-bottom:18px; }
+.meta-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:18px; }
+.meta-item{ background:#f8fafc; padding:18px; border-radius:18px; }
+.meta-label{ font-size:12px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:#64748b; margin-bottom:10px; }
+.meta-value{ line-height:1.8; font-size:14px; }
+.discussion p{ line-height:1.9; color:var(--muted); margin-bottom:24px; }
+.comment-input{ display:flex; gap:12px; margin-bottom:24px; }
+.comment-input input{ flex:1; padding:16px; border-radius:18px; background:#f8fafc; border:1px solid var(--line); outline:none; color:var(--text); }
+.comment-input button, .request-form button, .pay-btn{ padding:16px 22px; border:none; border-radius:18px; background:linear-gradient(135deg,var(--purple),#6d5efc); font-weight:800; color:white; cursor:pointer; }
+.comment{ padding:18px 0; border-bottom:1px solid #eef2f7; }
+.comment-user{ font-weight:800; margin-bottom:8px; }
+.comment-text{ line-height:1.8; color:#475569; }
+.back-btn{ display:inline-flex; align-items:center; gap:10px; padding:14px 18px; border-radius:18px; background:linear-gradient(135deg,var(--purple),#6d5efc); font-weight:800; cursor:pointer; margin-bottom:24px; color:white; }
+.feature-grid, .mindmap-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:24px; margin-bottom:30px; }
+.feature-card{ padding:28px; cursor:pointer; transition:.3s; }
+.feature-card:hover{ transform:translateY(-6px); }
+.feature-card i{ font-size:36px; margin-bottom:18px; color:#8b5cf6; }
+.feature-card h3{ font-size:26px; margin-bottom:12px; }
+.feature-card p, .list-card p{ line-height:1.8; color:var(--muted); }
+.list-grid{ display:grid; gap:18px; }
+.list-card{ padding:24px; }
+.list-card h3{ font-size:22px; margin-bottom:12px; }
+.mindmap-card{ padding:20px; }
+.mindmap-card h3{ font-size:22px; margin-bottom:18px; }
+.mindmap-card img{ width:100%; height:260px; object-fit:cover; border-radius:20px; }
+.request-box{ padding:30px; }
+.request-form{ display:grid; gap:18px; }
+.request-form input, .request-form textarea, .request-form select{ padding:18px; border-radius:18px; background:#f8fafc; border:1px solid var(--line); outline:none; color:var(--text); }
+.request-form textarea{ min-height:160px; resize:none; }
+.estimation-box{ margin-top:24px; display:none; background:rgba(124,92,255,.08); border:1px solid rgba(124,92,255,.2); padding:24px; border-radius:24px; }
+.estimation-box.active{ display:block; }
+.estimation-box h3{ font-size:28px; margin-bottom:18px; }
+.estimation-item{ margin-bottom:14px; line-height:1.8; }
+
+.modal{ position:fixed; inset:0; background:rgba(15,23,42,.55); display:none; align-items:center; justify-content:center; z-index:999; padding:20px; }
+.modal.active{ display:flex; }
+.modal-box{ width:100%; max-width:520px; background:white; padding:38px; border-radius:34px; text-align:center; }
+.premium-price{ display:flex; align-items:flex-end; justify-content:center; gap:8px; margin-top:24px; margin-bottom:16px; }
+
+.price-animate{
+font-size:68px;
+font-weight:900;
+background:linear-gradient(135deg,#7c5cff,#9b8cff);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+animation:pulsePrice 2s infinite;
+}
+
+.price-sub{ font-size:22px; font-weight:700; margin-bottom:12px; color:#64748b; }
+@keyframes pulsePrice{ 0%{transform:scale(1);} 50%{transform:scale(1.06);} 100%{transform:scale(1);} }
+
+/* ATURAN INTERFACES RESPONSIVE HP LU (100% RESPONSIVE) */
+@media(max-width: 1000px){
+  .app { flex-direction: column; height: auto; overflow-x: hidden; }
+  .sidebar { display: none; }
+  .main { padding: 16px; width: 100%; overflow-y: visible; }
+  .hero h1 { font-size: 32px; letter-spacing: -1px; }
+  .hero p { font-size: 14px; line-height: 1.6; }
+  .hero-card h2 { font-size: 28px; }
+  .video-grid { grid-template-columns: 1fr; gap: 16px; }
+  .video-title { font-size: 18px; }
+  .fyp-feed { max-width: 100%; height: calc(100vh - 40px); margin: 10px 0; border-radius: 16px; }
+  .fyp-overlay h3 { font-size: 16px; }
+  .fyp-overlay p { font-size: 12px; }
+  .player-title { font-size: 24px; }
+  .player-content { padding: 16px; }
+  .meta-box h2, .discussion h2 { font-size: 22px; }
+  .modal-box { padding: 24px; border-radius: 24px; }
+  .modal-box h2 { font-size: 28px !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="modal" id="paymentModal">
+<div class="modal-box">
+<h2 style="font-size:42px;margin-bottom:14px;">Noesis Premium</h2>
+<p style="line-height:1.9;color:#64748b;">
+Akses fitur premium untuk bedah jurnal ilmiah secara mendalam. Anda akan mendapatkan konten jurnal yang relevan dan dijelaskan secara gamblang dengan bahasa yang mudah dicerna.
+</p>
+<div class="premium-price">
+<div class="price-animate">40K</div>
+<div class="price-sub">/bulan</div>
+</div>
+<button class="pay-btn" onclick="activatePremium()">Bayar Premium</button>
+</div>
+</div>
+
+<div class="app">
+<aside class="sidebar">
+<div class="logo">
+<div class="logo-circle"></div>
+<h1>noesis</h1>
+</div>
+<div class="menu">
+<div class="menu-item active" onclick="showPage('homePage',this)">
+<i class="fa-solid fa-house"></i> Beranda Free
+</div>
+<div class="menu-item" onclick="openPremiumHome(this)">
+<i class="fa-solid fa-crown"></i> Beranda Premium
+</div>
+</div>
+<div class="menu-title">Major-Based Content</div>
+<div class="menu">
+<div class="menu-item" onclick="filterVideos('Ekonomi', this)">Ekonomi</div>
+<div class="menu-item" onclick="filterVideos('Hukum', this)">Hukum</div>
+<div class="menu-item" onclick="filterVideos('Psikologi', this)">Psikologi</div>
+<div class="menu-item" onclick="filterVideos('all', this)">Semua Video</div>
+</div>
+<div class="menu-title">Validator</div>
+<div class="menu">
+<div class="menu-item">Dr. M Rifki Ulin Najjah</div>
+<div class="menu-item">Dr. Zahra Waliyyatul Ahdi</div>
+<div class="menu-item">Dr. Khifdzil Ma'rifah</div>
+<div class="menu-item">Dr. Syarwahyu Syahmiaffan</div>
+</div>
+</aside>
+
+<main class="main">
+<section class="page active" id="homePage">
+<div class="hero">
+<h1>Scientific content for modern attention span</h1>
+<p>Konten freemium fokus pada highlight isu aktual dan teaser jurnal ilmiah agar mahasiswa tertarik memahami topik.</p>
+</div>
+<div class="fyp-feed" id="freeGrid"></div>
+</section>
+
+<section class="page" id="premiumHome">
+<div class="hero">
+<h1>Deep Journal Breakdown</h1>
+<p>Konten premium fokus pada bedah jurnal penuh: metodologi, research gap, hingga implikasi dunia nyata.</p>
+</div>
+<div class="hero-card">
+<h2>Premium = Understanding</h2>
+<p>Premium memberi struktur berpikir ilmiah yang lebih jelas.</p>
+</div>
+<div class="feature-grid">
+<div class="feature-card" onclick="showFeature('mindmapPage')">
+<i class="fa-solid fa-diagram-project"></i>
+<h3>Mind Mapping</h3>
+<p>Mind map terstruktur untuk setiap video premium.</p>
+</div>
+<div class="feature-card" onclick="showFeature('researchPage')">
+<i class="fa-solid fa-flask"></i>
+<h3>Research On-Demand</h3>
+<p>Request interpretasi jurnal menjadi video edukatif.</p>
+</div>
+</div>
+<div class="video-grid" id="premiumGrid"></div>
+</section>
+
+<section class="page" id="videoPage">
+<div class="back-btn" onclick="backHome()"><i class="fa-solid fa-arrow-left"></i> Kembali</div>
+<div class="player-box">
+<video controls id="videoPlayer">
+<source id="videoSource" src="" type="video/mp4">
+</video>
+<div class="player-content">
+<div class="player-title" id="playerTitle"></div>
+<div class="player-desc" id="playerDesc"></div>
+<div class="discussion" id="journalRecommendationSection">
+<h2>Related Journal Recommendations</h2>
+<div class="meta-grid" id="videoJournals"></div>
+</div>
+<div class="meta-box">
+<h2>Grounded in Research</h2>
+<div class="meta-grid">
+<div class="meta-item"><div class="meta-label">Indexing</div><div class="meta-value">Scopus Checked</div></div>
+<div class="meta-item"><div class="meta-label">Volume</div><div class="meta-value">Vol 18 • 2026</div></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="feature-page" id="mindmapPage">
+<div class="back-btn" onclick="backPremium()"><i class="fa-solid fa-arrow-left"></i> Kembali</div>
+<h1>Mind Mapping</h1>
+<div class="mindmap-grid">
+<div class="mindmap-card"><h3>AGI and Future Economy</h3><img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=1200&auto=format&fit=crop"></div>
+</div>
+</section>
+
+<section class="feature-page" id="researchPage">
+<div class="back-btn" onclick="backPremium()"><i class="fa-solid fa-arrow-left"></i> Kembali</div>
+<h1>Research On-Demand</h1>
+<div class="request-box">
+<div class="request-form">
+<input type="text" id="researchTitle" placeholder="Judul Artikel / Topik">
+<button onclick="submitResearchRequest()">Kirim Permintaan</button>
+</div>
+</div>
+</section>
+</main>
+</div>
+
+<script>
+let premiumUnlocked = false;
+let lastHomeView = 'homePage';
+
+// Array disesuaikan 100% presisi dengan nama file di repositori GitHub kamu
+const videos = [
+{
+title:"Rupiah melemah hingga 17.000 per USD, faktor domestik apa aja yang jadi penyebaabnya?",
+desc:"Highlight analisis hubungan suku bunga, inflasi, dan devisa terhadap depresiasi rupiah.",
+src:"freemiumsatui.mp4",
+image:"tumbnaillagilagi.jpg",
+validator:"Dr. M Rifki Ulin Najjah",
+tag:"Research Gap",
+category:"Ekonomi",
+type:"free"
+},
+{
+title:"Membuat meme Prabowo bisa dipenjara?",
+desc:"Highlight analisis artikel hukum pasal 219 RUUKHP terkait hukum pidana atas penghinaan presiden.",
+src:"freemiumtigai.mp4",
+image:"premiumtumbnaillagi.jpg",
+validator:"Dr. Rifki Ulin Najjah",
+tag:"Legal Research",
+category:"Hukum",
+type:"free"
+},
+{
+title:"Apakah benar orang NPD Nirempati?",
+desc:"Highlight analisis perilaku NPD melalui kacamata jurnal Frontiers in Psychiatry.",
+src:"freemiumduai.mp4",
+image:"premiumtumbnaillagi.jpg",
+validator:"Dr. Zahra Waliyyatul Ahdi",
+tag:"Behavioral",
+category:"Psikologi",
+type:"free"
+},
+{
+title:"Apakah Faktor Domestik Cukup Signifikan Untuk Memengaruhi Nilai Tukar?",
+desc:"Breakdown Artikel Pengaruh Inflasi, Suku Bunga, Cadangan Devisa terhadap Nilai Tukar Rupiah.",
+src:"premiumsatuuii.mp4",
+image:"tumbnaillagilagi.jpeg",
+validator:"M Rifki Ulin Najjah",
+tag:"Deep Research",
+category:"Ekonomi",
+type:"premium",
+journals: [{ title: "Analisis Pengaruh Inflasi terhadap Nilai Tukar", pub: "Universitas Sriwijaya" }]
+},
+{
+title:"Analisis behavior NPD dan mispersepsi orang orang terhadap NPD",
+desc:"Breakdown Artikel The concept of Narcissistic Personality Disorder Three levels of analysis.",
+src:"premiumduai.mp4",
+image:"premiumtumbnaillagi.jpeg",
+validator:"Dr. Zahra Waliyyatul Ahdi",
+tag:"Journal Breakdown",
+category:"Psikologi",
+type:"premium",
+journals: [{ title: "Circadian Rhythm Variable Analytics", pub: "Elsevier" }]
+},
+{
+title:"Kontraversi Pasal 219 RUUKHP: Batas Antara Kritik dan Penghinaan dalam Demokrasi",
+desc:"Breakdown Artikel Penghidupan Kembali Pasal Terhadap Penghinaan Presiden dalam RUUKHP.",
+src:"premiumtigaaii.mp4",
+image:"premiumtumbnail.jpg",
+validator:"Dr. M Rifki Ulin Najjah",
+tag:"Experimental Study",
+category:"Hukum",
+type:"premium",
+journals: [{ title: "Konstitusionalitas Pasal Penghinaan Presiden", pub: "Jurnal Konstitusi" }]
+}
+];
+
+let currentCategory = 'all';
+
+function renderVideos(){
+const filteredVideos = currentCategory === 'all' ? videos : videos.filter(video => video.category === currentCategory);
+const freeGrid = document.getElementById('freeGrid');
+const premiumGrid = document.getElementById('premiumGrid');
+
+freeGrid.innerHTML='';
+premiumGrid.innerHTML='';
+
+filteredVideos.forEach((video,index)=>{
+    const durId = `dur-${index}`;
+    if(video.type === 'free'){
+        const fypCard = `
+        <div class="fyp-item">
+            <div class="fyp-badge">Freemium</div>
+            <div class="fyp-duration" id="${durId}">00:00</div>
+            <video src="${video.src}" poster="${video.image}" loop onclick="toggleFypVideo(this)" playsinline></video>
+            <div class="fyp-overlay">
+                <h3>${video.title}</h3>
+                <p>${video.desc}</p>
+            </div>
+            <div class="fyp-actions">
+                <button class="fyp-btn" onclick="openVideo(${index})"><i class="fa-solid fa-book-open"></i></button>
+            </div>
+        </div>
+        `;
+        freeGrid.innerHTML += fypCard;
+    }else{
+        const card = `
+        <div class="video-card">
+            ${!premiumUnlocked ? `
+            <div class="lock-layer" onclick="openModal()">
+                <i class="fa-solid fa-lock"></i>
+                <h3>Premium Locked</h3>
+                <button class="unlock-btn">Unlock Premium</button>
+            </div>
+            ` : ''}
+            <div onclick="openVideo(${index})">
+                <div class="thumbnail">
+                    <div class="badge premium">Premium</div>
+                    <img src="${video.image}">
+                    <div class="dynamic-duration" id="${durId}">00:00</div>
+                </div>
+                <div class="video-content">
+                    <div class="video-title">${video.title}</div>
+                    <div class="video-desc">${video.desc}</div>
+                </div>
+            </div>
+        </div>
+        `;
+        premiumGrid.innerHTML += card;
+    }
+});
+
+filteredVideos.forEach((video,index)=>{
+    const tempVid = document.createElement('video');
+    tempVid.src = video.src;
+    tempVid.addEventListener('loadedmetadata',()=>{
+        let duration = tempVid.duration;
+        let minutes = Math.floor(duration / 60);
+        let seconds = Math.floor(duration % 60);
+        if(seconds < 10){ seconds = '0' + seconds; }
+        const badge = document.getElementById(`dur-${index}`);
+        if(badge) badge.innerText = `${minutes}:${seconds}`;
+    });
+});
+setupFypObserver();
+}
+
+function toggleFypVideo(vid) {
+if(vid.paused) vid.play().catch(()=>{});
+else vid.pause();
+}
+
+function setupFypObserver() {
+const fypObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        const video = entry.target.querySelector('video');
+        if (video) {
+            if (entry.isIntersecting) { video.play().catch(()=>{}); } 
+            else { video.pause(); }
+        }
+    });
+}, { threshold: 0.6 });
+document.querySelectorAll('.fyp-item').forEach(item => fypObserver.observe(item));
+}
+
+function filterVideos(category, element){
+currentCategory = category;
+renderVideos();
+if(element){
+    document.querySelectorAll('.menu-item').forEach(item=>item.classList.remove('active'));
+    element.classList.add('active');
+}
+}
+
+function showPage(pageId, element){
+document.querySelectorAll('.fyp-item video').forEach(v => v.pause());
+const mainPlayer = document.getElementById('videoPlayer');
+if(mainPlayer) mainPlayer.pause();
+
+document.querySelectorAll('.page').forEach(page=>page.classList.remove('active'));
+document.querySelectorAll('.feature-page').forEach(page=>page.classList.remove('active'));
+document.getElementById(pageId).classList.add('active');
+
+if(pageId === 'homePage' || pageId === 'premiumHome') { lastHomeView = pageId; }
+if(element){
+    document.querySelectorAll('.menu-item').forEach(item=>item.classList.remove('active'));
+    element.classList.add('active');
+}
+}
+
+function openPremiumHome(element){
+if(!premiumUnlocked){ openModal(); return; }
+showPage('premiumHome', element);
+}
+
+function showFeature(pageId){ showPage(pageId); }
+function backHome(){ showPage(lastHomeView); }
+function backPremium(){ showPage('premiumHome'); }
+
+function openVideo(index){
+const filteredVideos = currentCategory === 'all' ? videos : videos.filter(video => video.category === currentCategory);
+const video = filteredVideos[index];
+
+showPage('videoPage');
+document.getElementById('playerTitle').innerText = video.title;
+document.getElementById('playerDesc').innerText = video.desc;
+
+const player = document.getElementById('videoPlayer');
+player.src = video.src;
+player.load();
+
+const journalSection = document.getElementById('journalRecommendationSection');
+const journalBox = document.getElementById('videoJournals');
+journalBox.innerHTML = '';
+
+if (video.type === 'premium') {
+    journalSection.style.display = 'block';
+    if(video.journals) {
+        video.journals.forEach(j => {
+            journalBox.innerHTML += `<div class="meta-item"><div class="meta-label">${j.pub}</div><div class="meta-value">${j.title}</div></div>`;
+        });
+    }
+} else {
+    journalSection.style.display = 'none';
+}
+}
+
+function submitResearchRequest(){
+document.getElementById('estimationBox').classList.add('active');
+}
+function openModal(){ document.getElementById('paymentModal').classList.add('active'); }
+function closeModal(){ document.getElementById('paymentModal').classList.remove('active'); }
+function activatePremium(){ premiumUnlocked = true; closeModal(); renderVideos(); showPage('premiumHome'); }
+
+window.addEventListener('click',function(e){
+const modal = document.getElementById('paymentModal');
+if(e.target === modal) closeModal();
+});
+
+renderVideos();
+</script>
+</body>
+</html>
