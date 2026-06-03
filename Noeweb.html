@@ -42,6 +42,7 @@ font-family:'Inter',sans-serif;
 .app{
 display:flex;
 height:100vh;
+height:100dvh; /* Mengikuti tinggi layar HP premium setelah dipotong notch/status bar */
 }
 
 .sidebar{
@@ -257,7 +258,8 @@ z-index:10;
 .fyp-feed {
 display: flex;
 flex-direction: column;
-height: 100vh;
+height: 70vh; /* Dikurangi dari 100vh agar menyisakan ruang aman layouting dashboard */
+height: 70dvh;
 width: 100%;
 max-width: 420px;
 margin: 20px 0;
@@ -369,17 +371,35 @@ animation:pulsePrice 2s infinite;
 .price-sub{ font-size:22px; font-weight:700; margin-bottom:12px; color:#64748b; }
 @keyframes pulsePrice{ 0%{transform:scale(1);} 50%{transform:scale(1.06);} 100%{transform:scale(1);} }
 
-/* ATURAN INTERFACES RESPONSIVE HP LU (100% RESPONSIVE) */
+/* OREK-OREK RESPONSIVE HP LU (FIX OVERFLOW DI HP PREMIUM) */
 @media(max-width: 1000px){
-  .app { flex-direction: column; height: auto; overflow-x: hidden; }
+  .app { 
+    flex-direction: column; 
+    height: auto; 
+    min-height: 100dvh; /* Menggunakan unit dinamis agar dashboard sinkron di HP premium */
+    overflow-x: hidden; 
+  }
   .sidebar { display: none; }
-  .main { padding: 16px; width: 100%; overflow-y: visible; }
+  .main { 
+    padding: 16px; 
+    width: 100%; 
+    overflow-y: visible; 
+    display: flex;
+    flex-direction: column;
+  }
   .hero h1 { font-size: 32px; letter-spacing: -1px; }
   .hero p { font-size: 14px; line-height: 1.6; }
   .hero-card h2 { font-size: 28px; }
   .video-grid { grid-template-columns: 1fr; gap: 16px; }
   .video-title { font-size: 18px; }
-  .fyp-feed { max-width: 100%; height: calc(100vh - 40px); margin: 10px 0; border-radius: 16px; }
+  
+  .fyp-feed { 
+    max-width: 100%; 
+    height: 65vh; 
+    height: 65dvh; /* Tinggi feed diturunkan agar kontainer induk dashboard terbaca oleh browser */
+    margin: 15px auto; 
+    border-radius: 16px; 
+  }
   .fyp-overlay h3 { font-size: 16px; }
   .fyp-overlay p { font-size: 12px; }
   .player-title { font-size: 24px; }
@@ -518,7 +538,6 @@ Akses fitur premium untuk bedah jurnal ilmiah secara mendalam. Anda akan mendapa
 let premiumUnlocked = false;
 let lastHomeView = 'homePage';
 
-// Array disesuaikan 100% presisi dengan nama file di repositori GitHub kamu
 const videos = [
 {
 title:"Rupiah melemah hingga 17.000 per USD, faktor domestik apa aja yang jadi penyebaabnya?",
