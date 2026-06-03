@@ -39,6 +39,79 @@ button, input, textarea, select{
 font-family:'Inter',sans-serif;
 }
 
+/* ==========================================================================
+   SPLASH / WELCOME SCREEN PRE-ENTRY
+   ========================================================================== */
+.welcome-screen {
+position: fixed;
+inset: 0;
+background: #0f172a;
+z-index: 99999;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+color: white;
+text-align: center;
+padding: 24px;
+transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.welcome-screen.fade-out {
+opacity: 0;
+pointer-events: none;
+transform: scale(1.02);
+}
+
+.welcome-logo-circle {
+width: 80px;
+height: 80px;
+border-radius: 50%;
+background: linear-gradient(135deg, var(--purple), #b56fff);
+box-shadow: 0 0 40px rgba(124,92,255,.6);
+margin-bottom: 24px;
+animation: pulsePrice 2s infinite;
+}
+
+.welcome-screen h1 {
+font-size: 48px;
+font-weight: 900;
+letter-spacing: -3px;
+margin-bottom: 12px;
+background: linear-gradient(135deg, #ffffff, #94a3b8);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+
+.welcome-screen p {
+font-size: 16px;
+color: #94a3b8;
+max-width: 320px;
+line-height: 1.6;
+margin-bottom: 32px;
+}
+
+.enter-btn {
+padding: 18px 36px;
+border: none;
+border-radius: 20px;
+background: linear-gradient(135deg, var(--purple), #6d5efc);
+color: white;
+font-weight: 800;
+font-size: 16px;
+cursor: pointer;
+box-shadow: 0 12px 30px rgba(124,92,255,.3);
+transition: 0.25s;
+}
+
+.enter-btn:hover {
+transform: translateY(-2px);
+box-shadow: 0 16px 35px rgba(124,92,255,.4);
+}
+
+/* ==========================================================================
+   MAIN DASHBOARD LAYOUT
+   ========================================================================== */
 .app{
 display:flex;
 height:100vh;
@@ -255,11 +328,14 @@ z-index:10;
 .lock-layer p{ line-height:1.8; color:#475569; margin-bottom:20px; }
 .unlock-btn{ padding:15px 24px; border:none; border-radius:18px; background:linear-gradient(135deg,var(--purple),#6d5efc); color:white; font-weight:800; cursor:pointer; }
 
+/* ==========================================================================
+   FYP MOBILE STYLING (TIKTOK STYLE FEED)
+   ========================================================================== */
 .fyp-feed {
 display: flex;
 flex-direction: column;
 height: 100vh;
-height: 100dvh; /* Tetap full screen murni untuk sensasi aslinya */
+height: 100dvh;
 width: 100%;
 max-width: 420px;
 margin: 20px 0;
@@ -280,7 +356,7 @@ position: absolute;
 bottom: 0;
 left: 0;
 width: 100%;
-padding: 40px 24px 40px; /* Tambah padding bawah dikit biar teks gak tabrakan sama menu */
+padding: 40px 24px 90px; /* Ditambah ruang aman agar tidak tertimpa bottom bar */
 background: linear-gradient(transparent, rgba(0,0,0,0.9));
 color: white;
 pointer-events: none;
@@ -291,7 +367,7 @@ gap: 8px;
 
 .fyp-overlay h3 { font-size: 22px; font-weight: 800; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
 .fyp-overlay p { font-size: 14px; line-height: 1.6; opacity: 0.9; }
-.fyp-actions { position: absolute; right: 16px; bottom: 40px; display: flex; flex-direction: column; gap: 16px; z-index: 10; }
+.fyp-actions { position: absolute; right: 16px; bottom: 100px; display: flex; flex-direction: column; gap: 16px; z-index: 10; }
 
 .fyp-btn {
 width: 48px;
@@ -313,6 +389,9 @@ transition: 0.2s;
 .fyp-badge { position: absolute; top: 24px; left: 24px; padding: 8px 14px; border-radius: 999px; font-size: 12px; font-weight: 800; color: white; background: rgba(124,92,255,0.95); z-index: 10; }
 .fyp-duration { position: absolute; top: 24px; right: 24px; background: rgba(0,0,0,0.6); padding: 8px 12px; border-radius: 12px; color: white; font-size: 12px; font-weight: 700; z-index: 10; }
 
+/* ==========================================================================
+   DETAIL VIDEO & DISKUSI COMPONENTS
+   ========================================================================== */
 .player-box, .meta-box, .discussion, .feature-card, .list-card, .mindmap-card, .request-box{ background:white; border:1px solid var(--line); border-radius:30px; }
 .player-box{ overflow:hidden; margin-top:20px; }
 .player-box video{ width:100%; max-height:620px; background:black; }
@@ -371,90 +450,147 @@ animation:pulsePrice 2s infinite;
 .price-sub{ font-size:22px; font-weight:700; margin-bottom:12px; color:#64748b; }
 @keyframes pulsePrice{ 0%{transform:scale(1);} 50%{transform:scale(1.06);} 100%{transform:scale(1);} }
 
-/* Sembunyikan navigasi mobile bawaan di tampilan Desktop */
-.mobile-nav { display: none; }
+/* Sembunyikan element penjelajah mobile bawaan pada mode laptop */
+.mobile-nav, .mobile-category-bar { display: none; }
 
-/* LAYOUTING RESPONSIVE HP LU (TIKTOK STYLE + BOTTOM DASHBOARD NAV) */
+/* ==========================================================================
+   OPTIMASI & RESPONSIVE LAYOUT UNTUK HP PREMIUM
+   ========================================================================== */
 @media(max-width: 1000px){
-  .app { 
-    flex-direction: column; 
-    height: 100vh; 
-    height: 100dvh;
-    overflow: hidden; 
-  }
-  .sidebar { display: none; }
-  .main { 
-    padding: 0; /* Reset padding biar video beneran mepet ke ujung jempol */
-    width: 100%; 
-    height: 100%;
-    overflow-y: auto;
-  }
-  
-  /* Kondisi layout ketika halaman Beranda aktif */
-  #homePage.active {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
+.app { 
+flex-direction: column; 
+height: 100vh; 
+height: 100dvh;
+overflow: hidden; 
+}
+.sidebar { display: none; }
+.main { 
+padding: 0; 
+width: 100%; 
+height: 100%;
+overflow-y: auto; /* Membuka kembali overflow scroll agar kolom diskusi video bisa discroll */
+-webkit-overflow-scrolling: touch;
+display: block;
+}
 
-  /* Sembunyikan teks Hero bawaan desktop di HP biar fokus ke feed video */
-  #homePage .hero { display: none; }
+/* Penyelarasan halaman agar komponen riset dan diskusi tidak hilang */
+.page {
+padding-bottom: 90px; /* Menyediakan safe area di atas bottom bar */
+}
 
-  .fyp-feed { 
-    max-width: 100%; 
-    height: 100%; 
-    margin: 0; 
-    border-radius: 0; /* Menghapus rounded corner biar persis full screen tiktok */
-  }
-  
-  .video-grid { grid-template-columns: 1fr; gap: 16px; padding: 16px; }
-  .video-title { font-size: 18px; }
-  .player-title { font-size: 24px; }
-  .player-content { padding: 16px; }
-  .meta-box h2, .discussion h2 { font-size: 22px; }
-  .modal-box { padding: 24px; border-radius: 24px; }
-  .modal-box h2 { font-size: 28px !important; }
+#homePage.active {
+display: flex;
+flex-direction: column;
+height: 100%;
+padding-bottom: 0;
+}
 
-  /* FLOATING TRANS-GLASS BOTTOM BAR KHUSUS HP PREMIUM */
-  .mobile-nav {
-    display: flex;
-    position: fixed;
-    bottom: 16px;
-    left: 16px;
-    right: 16px;
-    height: 64px;
-    background: rgba(15, 23, 42, 0.45); /* Warna gelap transparan glassmorphism */
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 24px;
-    justify-content: space-around;
-    align-items: center;
-    z-index: 9999;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  }
+#homePage .hero { display: none; }
 
-  .mobile-nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 11px;
-    font-weight: 700;
-    cursor: pointer;
-    flex: 1;
-    transition: 0.2s;
-  }
+.fyp-feed { 
+max-width: 100%; 
+height: 100%; 
+margin: 0; 
+border-radius: 0; 
+}
 
-  .mobile-nav-item i { font-size: 18px; }
-  .mobile-nav-item.active {
-    color: #a78bfa; /* Warna ungu terang agar pop-up menyala di atas video */
-  }
+/* Pembetulan layout halaman detail video di HP */
+#videoPage {
+padding: 16px 16px 100px 16px !important;
+}
+.player-title { font-size: 24px; }
+.player-content { padding: 16px; }
+.meta-box, .discussion { padding: 20px; border-radius: 20px; }
+.meta-box h2, .discussion h2 { font-size: 22px; }
+.meta-grid { grid-template-columns: 1fr; }
+
+.video-grid { grid-template-columns: 1fr; gap: 16px; padding: 16px; }
+.video-title { font-size: 18px; }
+.modal-box { padding: 24px; border-radius: 24px; }
+.modal-box h2 { font-size: 28px !important; }
+
+/* HORIZONTAL SCROLLABLE MAJOR CATEGORY BAR KHUSUS DI HP */
+.mobile-category-bar {
+display: flex;
+position: fixed;
+top: 12px;
+left: 0;
+right: 0;
+padding: 0 16px;
+gap: 8px;
+overflow-x: auto;
+white-space: nowrap;
+z-index: 9999;
+scrollbar-width: none;
+}
+.mobile-category-bar::-webkit-scrollbar { display: none; }
+.mobile-cat-item {
+display: inline-block;
+padding: 10px 18px;
+background: rgba(15, 23, 42, 0.45);
+backdrop-filter: blur(10px);
+-webkit-backdrop-filter: blur(10px);
+border: 1px solid rgba(255,255,255,0.08);
+color: rgba(255,255,255,0.8);
+border-radius: 999px;
+font-size: 13px;
+font-weight: 700;
+cursor: pointer;
+}
+.mobile-cat-item.active {
+background: var(--purple);
+color: white;
+box-shadow: 0 8px 20px rgba(124,92,255,0.3);
+}
+
+/* FLOATING DASHBOARD BOTTOM NAVIGATION */
+.mobile-nav {
+display: flex;
+position: fixed;
+bottom: 16px;
+left: 16px;
+right: 16px;
+height: 64px;
+background: rgba(15, 23, 42, 0.5);
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+border: 1px solid rgba(255, 255, 255, 0.1);
+border-radius: 24px;
+justify-content: space-around;
+align-items: center;
+z-index: 9998;
+box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+.mobile-nav-item {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 4px;
+color: rgba(255, 255, 255, 0.5);
+font-size: 11px;
+font-weight: 700;
+cursor: pointer;
+flex: 1;
+transition: 0.2s;
+}
+
+.mobile-nav-item i { font-size: 18px; }
+.mobile-nav-item.active {
+color: #a78bfa;
+}
 }
 </style>
 </head>
 <body>
+
+<!-- WELCOME SCREEN / SPLASH PAGE PRE-ENTRY -->
+<div class="welcome-screen" id="welcomePage">
+<div class="welcome-logo-circle"></div>
+<h1>noesis</h1>
+<p>Scientific content for modern attention span. Bedah jurnal ilmiah terstruktur dengan penyajian ringkas.</p>
+<button class="enter-btn" onclick="enterApp()">Masuk ke Aplikasi</button>
+</div>
 
 <div class="modal" id="paymentModal">
 <div class="modal-box">
@@ -468,6 +604,14 @@ Akses fitur premium untuk bedah jurnal ilmiah secara mendalam. Anda akan mendapa
 </div>
 <button class="pay-btn" onclick="activatePremium()">Bayar Premium</button>
 </div>
+</div>
+
+<!-- Horizontal Category Bar khusus Tampilan HP di Halaman Beranda -->
+<div class="mobile-category-bar" id="mobCatBar">
+<div class="mobile-cat-item active" onclick="filterVideosMobile('all', this)">Semua</div>
+<div class="mobile-cat-item" onclick="filterVideosMobile('Ekonomi', this)">Ekonomi</div>
+<div class="mobile-cat-item" onclick="filterVideosMobile('Hukum', this)">Hukum</div>
+<div class="mobile-cat-item" onclick="filterVideosMobile('Psikologi', this)">Psikologi</div>
 </div>
 
 <div class="app">
@@ -500,7 +644,7 @@ Akses fitur premium untuk bedah jurnal ilmiah secara mendalam. Anda akan mendapa
 </div>
 </aside>
 
-<main class="main">
+<main class="main" id="mainScrollArea">
 <section class="page active" id="homePage">
 <div class="hero">
 <h1>Scientific content for modern attention span</h1>
@@ -553,6 +697,21 @@ Akses fitur premium untuk bedah jurnal ilmiah secara mendalam. Anda akan mendapa
 <div class="meta-item"><div class="meta-label">Volume</div><div class="meta-value">Vol 18 • 2026</div></div>
 </div>
 </div>
+
+<!-- KOMPONEN KOLOM DISKUSI DAN KOMENTAR YANG TETAP RENDER UTUH -->
+<div class="discussion">
+<h2>Diskusi & Analisis Makro</h2>
+<p>Bagikan opini akademis atau tanyakan kritik metodologi riset terkait topik jurnal ini.</p>
+<div class="comment-input">
+<input type="text" placeholder="Tulis analisis atau pertanyaan diskusi...">
+<button>Kirim</button>
+</div>
+<div class="comment">
+<div class="comment-user">Nabila Putri, S.E.</div>
+<div class="comment-text">Metodologi pengujian variabel suku bunga di jurnal pendukungnya sangat presisi dalam menangkap fenomena depresiasi kuartal ini.</div>
+</div>
+</div>
+
 </div>
 </div>
 </section>
@@ -573,19 +732,23 @@ Akses fitur premium untuk bedah jurnal ilmiah secara mendalam. Anda akan mendapa
 <input type="text" id="researchTitle" placeholder="Judul Artikel / Topik">
 <button onclick="submitResearchRequest()">Kirim Permintaan</button>
 </div>
+<div class="estimation-box" id="estimationBox">
+<h3>Estimasi Interpretasi Jurnal</h3>
+<div class="estimation-item">Topik sedang dievaluasi oleh sistem validator untuk kesesuaian modul edukasi.</div>
+</div>
 </div>
 </section>
 </main>
 
 <nav class="mobile-nav">
-  <div class="mobile-nav-item active" id="mobTabFree" onclick="showPage('homePage'); updateMobileActive('mobTabFree')">
-    <i class="fa-solid fa-house"></i>
-    <span>Free Feed</span>
-  </div>
-  <div class="mobile-nav-item" id="mobTabPremium" onclick="openPremiumHomeMobile();">
-    <i class="fa-solid fa-crown"></i>
-    <span>Premium Dashboard</span>
-  </div>
+<div class="mobile-nav-item active" id="mobTabFree" onclick="showPage('homePage'); updateMobileActive('mobTabFree')">
+<i class="fa-solid fa-house"></i>
+<span>Free Feed</span>
+</div>
+<div class="mobile-nav-item" id="mobTabPremium" onclick="openPremiumHomeMobile();">
+<i class="fa-solid fa-crown"></i>
+<span>Premium Dashboard</span>
+</div>
 </nav>
 
 </div>
@@ -593,6 +756,11 @@ Akses fitur premium untuk bedah jurnal ilmiah secara mendalam. Anda akan mendapa
 <script>
 let premiumUnlocked = false;
 let lastHomeView = 'homePage';
+
+function enterApp() {
+const welcomeScreen = document.getElementById('welcomePage');
+welcomeScreen.classList.add('fade-out');
+}
 
 const videos = [
 {
@@ -671,61 +839,61 @@ freeGrid.innerHTML='';
 premiumGrid.innerHTML='';
 
 filteredVideos.forEach((video,index)=>{
-    const durId = `dur-${index}`;
-    if(video.type === 'free'){
-        const fypCard = `
-        <div class="fyp-item">
-            <div class="fyp-badge">Freemium</div>
-            <div class="fyp-duration" id="${durId}">00:00</div>
-            <video src="${video.src}" poster="${video.image}" loop onclick="toggleFypVideo(this)" playsinline></video>
-            <div class="fyp-overlay">
-                <h3>${video.title}</h3>
-                <p>${video.desc}</p>
-            </div>
-            <div class="fyp-actions">
-                <button class="fyp-btn" onclick="openVideo(${index})"><i class="fa-solid fa-book-open"></i></button>
-            </div>
-        </div>
-        `;
-        freeGrid.innerHTML += fypCard;
-    }else{
-        const card = `
-        <div class="video-card">
-            ${!premiumUnlocked ? `
-            <div class="lock-layer" onclick="openModal()">
-                <i class="fa-solid fa-lock"></i>
-                <h3>Premium Locked</h3>
-                <button class="unlock-btn">Unlock Premium</button>
-            </div>
-            ` : ''}
-            <div onclick="openVideo(${index})">
-                <div class="thumbnail">
-                    <div class="badge premium">Premium</div>
-                    <img src="${video.image}">
-                    <div class="dynamic-duration" id="${durId}">00:00</div>
-                </div>
-                <div class="video-content">
-                    <div class="video-title">${video.title}</div>
-                    <div class="video-desc">${video.desc}</div>
-                </div>
-            </div>
-        </div>
-        `;
-        premiumGrid.innerHTML += card;
-    }
+const durId = `dur-${index}`;
+if(video.type === 'free'){
+const fypCard = `
+<div class="fyp-item">
+<div class="fyp-badge">Freemium</div>
+<div class="fyp-duration" id="${durId}">00:00</div>
+<video src="${video.src}" poster="${video.image}" loop onclick="toggleFypVideo(this)" playsinline></video>
+<div class="fyp-overlay">
+<h3>${video.title}</h3>
+<p>${video.desc}</p>
+</div>
+<div class="fyp-actions">
+<button class="fyp-btn" onclick="openVideo(${index})"><i class="fa-solid fa-book-open"></i></button>
+</div>
+</div>
+`;
+freeGrid.innerHTML += fypCard;
+}else{
+const card = `
+<div class="video-card">
+${!premiumUnlocked ? `
+<div class="lock-layer" onclick="openModal()">
+<i class="fa-solid fa-lock"></i>
+<h3>Premium Locked</h3>
+<button class="unlock-btn">Unlock Premium</button>
+</div>
+` : ''}
+<div onclick="openVideo(${index})">
+<div class="thumbnail">
+<div class="badge premium">Premium</div>
+<img src="${video.image}">
+<div class="dynamic-duration" id="${durId}">00:00</div>
+</div>
+<div class="video-content">
+<div class="video-title">${video.title}</div>
+<div class="video-desc">${video.desc}</div>
+</div>
+</div>
+</div>
+`;
+premiumGrid.innerHTML += card;
+}
 });
 
 filteredVideos.forEach((video,index)=>{
-    const tempVid = document.createElement('video');
-    tempVid.src = video.src;
-    tempVid.addEventListener('loadedmetadata',()=>{
-        let duration = tempVid.duration;
-        let minutes = Math.floor(duration / 60);
-        let seconds = Math.floor(duration % 60);
-        if(seconds < 10){ seconds = '0' + seconds; }
-        const badge = document.getElementById(`dur-${index}`);
-        if(badge) badge.innerText = `${minutes}:${seconds}`;
-    });
+const tempVid = document.createElement('video');
+tempVid.src = video.src;
+tempVid.addEventListener('loadedmetadata',()=>{
+let duration = tempVid.duration;
+let minutes = Math.floor(duration / 60);
+let seconds = Math.floor(duration % 60);
+if(seconds < 10){ seconds = '0' + seconds; }
+const badge = document.getElementById(`dur-${index}`);
+if(badge) badge.innerText = `${minutes}:${seconds}`;
+});
 });
 setupFypObserver();
 }
@@ -737,13 +905,13 @@ else vid.pause();
 
 function setupFypObserver() {
 const fypObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        const video = entry.target.querySelector('video');
-        if (video) {
-            if (entry.isIntersecting) { video.play().catch(()=>{}); } 
-            else { video.pause(); }
-        }
-    });
+entries.forEach(entry => {
+const video = entry.target.querySelector('video');
+if (video) {
+if (entry.isIntersecting) { video.play().catch(()=>{}); } 
+else { video.pause(); }
+}
+});
 }, { threshold: 0.6 });
 document.querySelectorAll('.fyp-item').forEach(item => fypObserver.observe(item));
 }
@@ -752,8 +920,18 @@ function filterVideos(category, element){
 currentCategory = category;
 renderVideos();
 if(element){
-    document.querySelectorAll('.menu-item').forEach(item=>item.classList.remove('active'));
-    element.classList.add('active');
+document.querySelectorAll('.menu-item').forEach(item=>item.classList.remove('active'));
+element.classList.add('active');
+}
+}
+
+// Handler kategori khusus mobile
+function filterVideosMobile(category, element) {
+currentCategory = category;
+renderVideos();
+if(element) {
+document.querySelectorAll('.mobile-cat-item').forEach(item => item.classList.remove('active'));
+element.classList.add('active');
 }
 }
 
@@ -766,11 +944,22 @@ document.querySelectorAll('.page').forEach(page=>page.classList.remove('active')
 document.querySelectorAll('.feature-page').forEach(page=>page.classList.remove('active'));
 document.getElementById(pageId).classList.add('active');
 
+// Tampilkan atau sembunyikan top category bar HP berdasarkan halaman aktif
+const catBar = document.getElementById('mobCatBar');
+if(pageId === 'homePage') {
+catBar.style.display = 'flex';
+} else {
+catBar.style.display = 'none';
+}
+
 if(pageId === 'homePage' || pageId === 'premiumHome') { lastHomeView = pageId; }
 if(element){
-    document.querySelectorAll('.menu-item').forEach(item=>item.classList.remove('active'));
-    element.classList.add('active');
+document.querySelectorAll('.menu-item').forEach(item=>item.classList.remove('active'));
+element.classList.add('active');
 }
+
+// Reset posisi scroll main container agar detail diskusi bisa dibaca dari atas
+document.getElementById('mainScrollArea').scrollTop = 0;
 }
 
 function openPremiumHome(element){
@@ -778,19 +967,19 @@ if(!premiumUnlocked){ openModal(); return; }
 showPage('premiumHome', element);
 }
 
-// Logic khusus klik tombol Premium dari Bottom Bar HP
 function openPremiumHomeMobile(){
 if(!premiumUnlocked){ 
-    openModal(); 
-    return; 
+openModal(); 
+return; 
 }
 showPage('premiumHome');
 updateMobileActive('mobTabPremium');
 }
 
 function updateMobileActive(tabId) {
-    document.querySelectorAll('.mobile-nav-item').forEach(item => item.classList.remove('active'));
-    document.getElementById(tabId).classList.add('active');
+document.querySelectorAll('.mobile-nav-item').forEach(item => item.classList.remove('active'));
+const target = document.getElementById(tabId);
+if(target) target.classList.add('active');
 }
 
 function showFeature(pageId){ showPage(pageId); }
@@ -814,14 +1003,14 @@ const journalBox = document.getElementById('videoJournals');
 journalBox.innerHTML = '';
 
 if (video.type === 'premium') {
-    journalSection.style.display = 'block';
-    if(video.journals) {
-        video.journals.forEach(j => {
-            journalBox.innerHTML += `<div class="meta-item"><div class="meta-label">${j.pub}</div><div class="meta-value">${j.title}</div></div>`;
-        });
-    }
+journalSection.style.display = 'block';
+if(video.journals) {
+video.journals.forEach(j => {
+journalBox.innerHTML += `<div class="meta-item"><div class="meta-label">${j.pub}</div><div class="meta-value">${j.title}</div></div>`;
+});
+}
 } else {
-    journalSection.style.display = 'none';
+journalSection.style.display = 'none';
 }
 }
 
