@@ -42,7 +42,7 @@ font-family:'Inter',sans-serif;
 .app{
 display:flex;
 height:100vh;
-height:100dvh; /* Mengikuti tinggi layar HP premium setelah dipotong notch/status bar */
+height:100dvh;
 }
 
 .sidebar{
@@ -258,8 +258,8 @@ z-index:10;
 .fyp-feed {
 display: flex;
 flex-direction: column;
-height: 70vh; /* Dikurangi dari 100vh agar menyisakan ruang aman layouting dashboard */
-height: 70dvh;
+height: 100vh;
+height: 100dvh; /* Tetap full screen murni untuk sensasi aslinya */
 width: 100%;
 max-width: 420px;
 margin: 20px 0;
@@ -280,7 +280,7 @@ position: absolute;
 bottom: 0;
 left: 0;
 width: 100%;
-padding: 40px 24px 24px;
+padding: 40px 24px 40px; /* Tambah padding bawah dikit biar teks gak tabrakan sama menu */
 background: linear-gradient(transparent, rgba(0,0,0,0.9));
 color: white;
 pointer-events: none;
@@ -371,42 +371,86 @@ animation:pulsePrice 2s infinite;
 .price-sub{ font-size:22px; font-weight:700; margin-bottom:12px; color:#64748b; }
 @keyframes pulsePrice{ 0%{transform:scale(1);} 50%{transform:scale(1.06);} 100%{transform:scale(1);} }
 
-/* OREK-OREK RESPONSIVE HP LU (FIX OVERFLOW DI HP PREMIUM) */
+/* Sembunyikan navigasi mobile bawaan di tampilan Desktop */
+.mobile-nav { display: none; }
+
+/* LAYOUTING RESPONSIVE HP LU (TIKTOK STYLE + BOTTOM DASHBOARD NAV) */
 @media(max-width: 1000px){
   .app { 
     flex-direction: column; 
-    height: auto; 
-    min-height: 100dvh; /* Menggunakan unit dinamis agar dashboard sinkron di HP premium */
-    overflow-x: hidden; 
+    height: 100vh; 
+    height: 100dvh;
+    overflow: hidden; 
   }
   .sidebar { display: none; }
   .main { 
-    padding: 16px; 
+    padding: 0; /* Reset padding biar video beneran mepet ke ujung jempol */
     width: 100%; 
-    overflow-y: visible; 
+    height: 100%;
+    overflow-y: auto;
+  }
+  
+  /* Kondisi layout ketika halaman Beranda aktif */
+  #homePage.active {
     display: flex;
     flex-direction: column;
+    height: 100%;
   }
-  .hero h1 { font-size: 32px; letter-spacing: -1px; }
-  .hero p { font-size: 14px; line-height: 1.6; }
-  .hero-card h2 { font-size: 28px; }
-  .video-grid { grid-template-columns: 1fr; gap: 16px; }
-  .video-title { font-size: 18px; }
-  
+
+  /* Sembunyikan teks Hero bawaan desktop di HP biar fokus ke feed video */
+  #homePage .hero { display: none; }
+
   .fyp-feed { 
     max-width: 100%; 
-    height: 65vh; 
-    height: 65dvh; /* Tinggi feed diturunkan agar kontainer induk dashboard terbaca oleh browser */
-    margin: 15px auto; 
-    border-radius: 16px; 
+    height: 100%; 
+    margin: 0; 
+    border-radius: 0; /* Menghapus rounded corner biar persis full screen tiktok */
   }
-  .fyp-overlay h3 { font-size: 16px; }
-  .fyp-overlay p { font-size: 12px; }
+  
+  .video-grid { grid-template-columns: 1fr; gap: 16px; padding: 16px; }
+  .video-title { font-size: 18px; }
   .player-title { font-size: 24px; }
   .player-content { padding: 16px; }
   .meta-box h2, .discussion h2 { font-size: 22px; }
   .modal-box { padding: 24px; border-radius: 24px; }
   .modal-box h2 { font-size: 28px !important; }
+
+  /* FLOATING TRANS-GLASS BOTTOM BAR KHUSUS HP PREMIUM */
+  .mobile-nav {
+    display: flex;
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    height: 64px;
+    background: rgba(15, 23, 42, 0.45); /* Warna gelap transparan glassmorphism */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 9999;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
+
+  .mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    flex: 1;
+    transition: 0.2s;
+  }
+
+  .mobile-nav-item i { font-size: 18px; }
+  .mobile-nav-item.active {
+    color: #a78bfa; /* Warna ungu terang agar pop-up menyala di atas video */
+  }
 }
 </style>
 </head>
@@ -465,7 +509,7 @@ Akses fitur premium untuk bedah jurnal ilmiah secara mendalam. Anda akan mendapa
 <div class="fyp-feed" id="freeGrid"></div>
 </section>
 
-<section class="page" id="premiumHome">
+<section class="page" id="premiumHome" style="padding: 16px;">
 <div class="hero">
 <h1>Deep Journal Breakdown</h1>
 <p>Konten premium fokus pada bedah jurnal penuh: metodologi, research gap, hingga implikasi dunia nyata.</p>
@@ -489,7 +533,7 @@ Akses fitur premium untuk bedah jurnal ilmiah secara mendalam. Anda akan mendapa
 <div class="video-grid" id="premiumGrid"></div>
 </section>
 
-<section class="page" id="videoPage">
+<section class="page" id="videoPage" style="padding: 16px;">
 <div class="back-btn" onclick="backHome()"><i class="fa-solid fa-arrow-left"></i> Kembali</div>
 <div class="player-box">
 <video controls id="videoPlayer">
@@ -513,7 +557,7 @@ Akses fitur premium untuk bedah jurnal ilmiah secara mendalam. Anda akan mendapa
 </div>
 </section>
 
-<section class="feature-page" id="mindmapPage">
+<section class="feature-page" id="mindmapPage" style="padding: 16px;">
 <div class="back-btn" onclick="backPremium()"><i class="fa-solid fa-arrow-left"></i> Kembali</div>
 <h1>Mind Mapping</h1>
 <div class="mindmap-grid">
@@ -521,7 +565,7 @@ Akses fitur premium untuk bedah jurnal ilmiah secara mendalam. Anda akan mendapa
 </div>
 </section>
 
-<section class="feature-page" id="researchPage">
+<section class="feature-page" id="researchPage" style="padding: 16px;">
 <div class="back-btn" onclick="backPremium()"><i class="fa-solid fa-arrow-left"></i> Kembali</div>
 <h1>Research On-Demand</h1>
 <div class="request-box">
@@ -532,6 +576,18 @@ Akses fitur premium untuk bedah jurnal ilmiah secara mendalam. Anda akan mendapa
 </div>
 </section>
 </main>
+
+<nav class="mobile-nav">
+  <div class="mobile-nav-item active" id="mobTabFree" onclick="showPage('homePage'); updateMobileActive('mobTabFree')">
+    <i class="fa-solid fa-house"></i>
+    <span>Free Feed</span>
+  </div>
+  <div class="mobile-nav-item" id="mobTabPremium" onclick="openPremiumHomeMobile();">
+    <i class="fa-solid fa-crown"></i>
+    <span>Premium Dashboard</span>
+  </div>
+</nav>
+
 </div>
 
 <script>
@@ -722,9 +778,24 @@ if(!premiumUnlocked){ openModal(); return; }
 showPage('premiumHome', element);
 }
 
+// Logic khusus klik tombol Premium dari Bottom Bar HP
+function openPremiumHomeMobile(){
+if(!premiumUnlocked){ 
+    openModal(); 
+    return; 
+}
+showPage('premiumHome');
+updateMobileActive('mobTabPremium');
+}
+
+function updateMobileActive(tabId) {
+    document.querySelectorAll('.mobile-nav-item').forEach(item => item.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+}
+
 function showFeature(pageId){ showPage(pageId); }
-function backHome(){ showPage(lastHomeView); }
-function backPremium(){ showPage('premiumHome'); }
+function backHome(){ showPage(lastHomeView); if(lastHomeView === 'homePage') updateMobileActive('mobTabFree'); }
+function backPremium(){ showPage('premiumHome'); updateMobileActive('mobTabPremium'); }
 
 function openVideo(index){
 const filteredVideos = currentCategory === 'all' ? videos : videos.filter(video => video.category === currentCategory);
@@ -759,7 +830,7 @@ document.getElementById('estimationBox').classList.add('active');
 }
 function openModal(){ document.getElementById('paymentModal').classList.add('active'); }
 function closeModal(){ document.getElementById('paymentModal').classList.remove('active'); }
-function activatePremium(){ premiumUnlocked = true; closeModal(); renderVideos(); showPage('premiumHome'); }
+function activatePremium(){ premiumUnlocked = true; closeModal(); renderVideos(); showPage('premiumHome'); updateMobileActive('mobTabPremium'); }
 
 window.addEventListener('click',function(e){
 const modal = document.getElementById('paymentModal');
